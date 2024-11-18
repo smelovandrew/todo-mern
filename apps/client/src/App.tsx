@@ -1,34 +1,51 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import {FC, useCallback, useState} from 'react'
 import './App.css'
+import { Unmounted, useEffectAsync } from "./utils/useEffectAsync.ts";
+import { fetchJson } from "./utils/fetchJson.ts";
+import TodoForm from "./TodoForm.tsx";
 
-function App() {
-  const [count, setCount] = useState(0)
+export interface Todo {
+  _id: string;
+  task: String,
+  completed: Boolean,
+}
+
+const App: FC = () => {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  console.log(todos)
+
+  const addTodo = useCallback((todo: Todo) => {
+    setTodos(todos => [...todos, todo]);
+  }, []);
+
+  useEffectAsync(async awaiter  => {
+    try {
+      const response = await awaiter(fetchJson<{ todos: Todo[]}>('http://localhost:3000/todos', {
+        method: "GET",
+      }));
+
+      if (response.data.status === 'success') {
+        setTodos(response.data.todos)
+      }
+    } catch (e) {
+      const error = e as Error;
+      if (!(error instanceof Unmounted)) {
+        console.error(`Failed to fetch reports: ${error.message}`);
+      }
+    }
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <h1>MERN Stack Todo App</h1>
+      <TodoForm onAddTodo={addTodo} />
+      <ul>
+        {todos.map(todo => (
+          <li key={todo._id}>{todo.task}</li>
+        ))}
+      </ul>
+    </div>
+
   )
 }
 
