@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "target": "es2021",
+    "preserveWatchOutput": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "strict": true,
+    "noUnusedLocals": false,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true,
+    "strictPropertyInitialization": false,
+    "lib": ["es2021", "esnext"]
+  },
+  "include": ["src"]
+}
