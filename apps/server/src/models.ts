@@ -2,7 +2,10 @@ import mongoose from "mongoose";
 
 
 const todoSchema = new mongoose.Schema({
-	task: String,
+	task: {
+		type: String,
+		required: true
+	},
 	completed: Boolean,
 });
 

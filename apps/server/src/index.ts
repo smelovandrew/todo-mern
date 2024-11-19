@@ -20,11 +20,17 @@ app.get('/todos', async (req, res) => {
     res.json({ todos });
 });
 
-// Create a new todo
 app.post('/todos', async (req, res) => {
-    const newTodo = new Todo(req.body);
-    await newTodo.save();
-    res.json({todo: newTodo });
+    try {
+        const newTodo = new Todo(req.body);
+        await newTodo.save();
+        res.json({ todo: newTodo });
+    } catch (e) {
+        const error = e as Error
+        console.error(error);
+        res.status(400).send({ status: 'error', message: error.message });
+    }
+
 });
 
 app.put('/todos/:id', async (req, res) => {
@@ -38,5 +44,5 @@ app.delete('/todos/:id', async (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`[server]: Server is running at http://localhost:${port}`);
+    console.log(`Server is running at http://localhost:${port}`);
 });
