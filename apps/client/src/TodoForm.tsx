@@ -1,6 +1,10 @@
 import {FC, useState} from 'react';
 import { Todo } from "./App.tsx";
-import {fetchJson} from "./utils/fetchJson.ts";
+import { fetchJson } from "./utils/fetchJson.ts";
+import Button from '@atlaskit/button/new';
+import Textfield from '@atlaskit/textfield';
+import { xcss, Box } from '@atlaskit/primitives';
+
 
 interface Props {
 	onAddTodo: (todo: Todo) => void
@@ -25,10 +29,18 @@ const TodoForm: FC<Props> = ({ onAddTodo }) => {
 		}
 	};
 	return (
-		<div>
-			<input type="text" value={task} onChange={(e) => setTask(e.target.value)} />
-			<button onClick={addTodo}>Add Todo</button>
-		</div>
+		<Box xcss={xcss({display: "inline-flex", gap: "space.150"})}>
+			<Textfield
+				name='add-task'
+				placeholder="Add task"
+				value={task}
+				onChange={(e) => setTask(e.currentTarget.value)}
+			/>
+			<Button
+				appearance="primary"
+				isDisabled={!task}
+				onClick={addTodo}>Add Todo</Button>
+		</Box>
 	);
 };
 export default TodoForm;
